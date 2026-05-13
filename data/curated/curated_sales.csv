@@ -1,6 +1,0 @@
-order_id,customer_id,product,price,quantity,date,total_value
-1,101,Mouse,50,2,2026-01-01,100
-2,102,Keyboard,120,1,2026-01-02,120
-3,101,Monitor,900,1,2026-01-03,900
-4,103,Mouse,50,3,2026-01-04,150
-5,104,Headset,200,1,2026-01-05,200

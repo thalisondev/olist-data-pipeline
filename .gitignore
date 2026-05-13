@@ -4,3 +4,8 @@ data/warehouse.db
 data/raw/olist/
 data/processed/
 data/curated/
+transform/target/
+transform/logs/
+transform/dbt_packages/
+transform/.user.yml
+logs/
