@@ -1,79 +1,76 @@
-# End-to-End Data Pipeline
+# Olist Data Pipeline 🚀
 
-A simple project to simulate how a real end-to-end data pipeline works.
+An end-to-end data engineering pipeline built with real Brazilian e-commerce data from [Olist](https://olist.com/).
 
-It ingests data from different sources (CSV and API), processes it, and stores everything in a structured database. The goal here is not complexity, but clarity and control over the whole pipeline.
+## Architecture
+CSV (Olist) → Python Ingestion → PostgreSQL (raw) → dbt (staging/marts) → Metabase Dashboard
+↑
+Prefect (orchestration)
 
----
+## Tech Stack
 
-## what this does
+| Layer | Technology |
+|---|---|
+| Data Source | Olist Dataset (Kaggle) |
+| Ingestion | Python + Pandas |
+| Storage | PostgreSQL 15 |
+| Transformation | dbt |
+| Orchestration | Prefect 2 |
+| Visualization | Metabase |
+| Infrastructure | Docker Compose |
 
-- reads e-commerce data from CSV  
-- fetches crypto data from an API  
-- cleans and transforms the data  
-- stores everything in SQLite  
-- runs the pipeline automatically  
-- logs what’s happening  
+## Data Models
 
----
+### Staging
+- `stg_orders` — cleaned orders data
+- `stg_customers` — cleaned customers data
+- `stg_order_items` — cleaned order items data
 
-## structure
+### Marts
+- `orders_by_state` — total orders and avg delivery days by state
+- `revenue_by_category` — revenue and orders by product category
+- `top_sellers` — best performing sellers
 
+## How to Run
 
-data_pipeline/
- ingestion/
- processing/
- storage/
- utils/
- data/
- logs/
- main.py
+### Prerequisites
+- Docker Desktop
+- Python 3.11
 
-
-Nothing fancy. Each part does one job.
-
----
-
-## quick start
-
-install dependencies:
-
+### 1. Clone the repository
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/thalisondev/olist-data-pipeline.git
+cd olist-data-pipeline
 ```
-run the pipeline:
+
+### 2. Download the dataset
+Download the [Olist dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) and place the CSV files in `data/raw/olist/`.
+
+### 3. Start the infrastructure
 ```bash
-  python main.py
+docker-compose up -d
 ```
-that’s it.
 
-## how it works:
- data comes in (csv + api)
- gets cleaned and transformed
- saved into sqlite
- logs are generated
- scheduler can run everything automatically
+### 4. Run the ingestion
+```bash
+python pipeline.py
+```
 
-## why i built this?
+### 5. Run dbt models
+```bash
+cd transform
+dbt run --profiles-dir .
+```
 
-to understand how data pipelines actually work in practice, not just in theory.
+### 6. Access the dashboards
+- **Metabase:** http://localhost:3000
+- **Prefect:** http://localhost:4200
 
-most tutorials show isolated pieces. this connects everything end-to-end.
+## Dashboard Preview
 
-notes
- simple by design
- easy to modify
- meant to be hacked and extended
- next steps
- move storage to postgres
- add cloud (aws/gcp)
- use airflow for orchestration
- add a dashboard
+![Olist Analytics Dashboard](docs/dashboard.png)
 
-other languages:
-
-🇧🇷 Portuguese: README.pt-br.md
-
-contact
-
- linkedin: https://www.linkedin.com/in/thalison-dev
+## Dataset
+- 100k+ orders from 2016 to 2018
+- 9 tables: orders, customers, products, sellers, payments, reviews, geolocation
+- Source: [Kaggle - Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
