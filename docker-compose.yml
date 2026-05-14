@@ -21,5 +21,26 @@ services:
     depends_on:
       - postgres
 
+  prefect:
+    image: prefecthq/prefect:2-python3.11
+    container_name: olist_prefect
+    command: prefect server start --host 0.0.0.0
+    ports:
+      - "4200:4200"
+    environment:
+      PREFECT_UI_URL: http://localhost:4200
+      PREFECT_API_URL: http://localhost:4200/api
+
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipeline
+    container_name: olist_pipeline
+    depends_on:
+      - postgres
+      - prefect
+    environment:
+      PREFECT_API_URL: http://olist_prefect:4200/api
+
 volumes:
   postgres_data:
