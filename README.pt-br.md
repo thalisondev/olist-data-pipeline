@@ -1,73 +1,94 @@
-# End-to-End Data Pipeline
+# Olist Data Pipeline 🚀
 
-Um projeto simples para simular como funciona um pipeline de dados completo (end-to-end) na prática.
-
-Ele coleta dados de diferentes fontes (CSV e API), processa e armazena tudo de forma estruturada. A ideia aqui não é complexidade, mas sim ter clareza e controle sobre todo o fluxo.
----
-
-## o que isso faz
-
-- lê dados de e-commerce via CSV  
-- busca dados de criptomoedas via API  
-- limpa e transforma os dados  
-- armazena tudo em SQLite  
-- roda o pipeline automaticamente  
-- registra logs do que está acontecendo  
+Um pipeline de engenharia de dados completo construído com dados reais de e-commerce brasileiro da [Olist](https://olist.com/).
 
 ---
 
-## estrutura:
-
-
-data_pipeline/
-ingestion/
-processing/
-storage/
-utils/
-data/
-logs/
-main.py
-
-
-Nada muito complexo. Cada parte faz só o que precisa fazer.
+## Arquitetura
+CSV (Olist) → Ingestão Python → PostgreSQL (raw) → dbt (staging/marts) → Dashboard Metabase
+↑
+Prefect (orquestração)
 
 ---
 
-## como rodar
+## Stack
 
-instalar dependências:
+| Camada | Tecnologia |
+|---|---|
+| Fonte de dados | Dataset Olist (Kaggle) |
+| Ingestão | Python + Pandas |
+| Armazenamento | PostgreSQL 15 |
+| Transformação | dbt |
+| Orquestração | Prefect 2 |
+| Visualização | Metabase |
+| Infraestrutura | Docker Compose |
 
+---
+
+## Modelos dbt
+
+### Staging
+- `stg_orders` — dados de pedidos limpos
+- `stg_customers` — dados de clientes limpos
+- `stg_order_items` — dados de itens de pedido limpos
+
+### Marts
+- `orders_by_state` — total de pedidos e média de dias de entrega por estado
+- `revenue_by_category` — receita e pedidos por categoria de produto
+- `top_sellers` — melhores vendedores por receita
+
+---
+
+## Como rodar
+
+### Pré-requisitos
+- Docker Desktop
+- Python 3.11
+
+### 1. Clone o repositório
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/thalisondev/olist-data-pipeline.git
+cd olist-data-pipeline
 ```
-rodar o pipeline:
+
+### 2. Baixe o dataset
+Baixe o [dataset da Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) e coloque os arquivos CSV em `data/raw/olist/`.
+
+### 3. Suba a infraestrutura
 ```bash
-python main.py
+docker-compose up -d
 ```
-é isso.
 
-## como funciona:
-os dados entram (csv + api)
-passam por limpeza e transformação
-são salvos no sqlite
-logs são gerados
-o scheduler pode rodar tudo automaticamente
-## por que eu fiz isso?
+### 4. Rode a ingestão
+```bash
+python pipeline.py
+```
 
-para entender como pipelines de dados funcionam na prática, não só na teoria.
+### 5. Rode os modelos dbt
+```bash
+cd transform
+dbt run --profiles-dir .
+```
 
-a maioria dos conteúdos mostra partes isoladas. aqui a ideia foi conectar tudo de ponta a ponta.
+### 6. Acesse os dashboards
+- **Metabase:** http://localhost:3000
+- **Prefect:** http://localhost:4200
 
-## observações:
+---
 
-simples de propósito
-fácil de modificar
-feito para testar, aprender e evoluir
-próximos passos
-migrar para postgres
-adicionar cloud (aws/gcp)
-usar airflow para orquestração
-criar um dashboard.
+## Dashboard
 
-contato:
-Linkedin: https://www.linkedin.com/in/thalison-dev
+![Olist Analytics Dashboard](docs/dashboard.png)
+
+---
+
+## Dataset
+- +100k pedidos de 2016 a 2018
+- 9 tabelas: pedidos, clientes, produtos, vendedores, pagamentos, avaliações, geolocalização
+- Fonte: [Kaggle - Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
+
+---
+
+## Contato
+
+LinkedIn: [linkedin.com/in/thalison-dev](https://www.linkedin.com/in/thalison-dev)
