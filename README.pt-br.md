@@ -1,6 +1,6 @@
 # Olist Data Pipeline 🚀
 
-> Pipeline end-to-end com dados reais do e-commerce brasileiro — do CSV bruto até o dashboard.
+> Pipeline end-to-end construído com dados reais do e-commerce brasileiro — do CSV bruto até o dashboard.
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
@@ -16,6 +16,8 @@
 Pipeline de dados construído com o dataset público da [Olist](https://olist.com/) — mais de **100 mil pedidos reais** do e-commerce brasileiro entre 2016 e 2018.
 
 O objetivo foi construir uma arquitetura completa de engenharia de dados: ingestão, armazenamento, transformação, orquestração e visualização — tudo rodando via Docker com um único comando.
+
+> 🇺🇸 [Read in English](README.md)
 
 ---
 
