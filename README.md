@@ -1,76 +1,134 @@
 # Olist Data Pipeline 🚀
 
-An end-to-end data engineering pipeline built with real Brazilian e-commerce data from [Olist](https://olist.com/).
+> Pipeline end-to-end com dados reais do e-commerce brasileiro — do CSV bruto até o dashboard.
 
-## Architecture
-CSV (Olist) → Python Ingestion → PostgreSQL (raw) → dbt (staging/marts) → Metabase Dashboard
-↑
-Prefect (orchestration)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![dbt](https://img.shields.io/badge/dbt-FF694B?style=for-the-badge&logo=dbt&logoColor=white)
+![Prefect](https://img.shields.io/badge/Prefect-024DFD?style=for-the-badge&logo=prefect&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Metabase](https://img.shields.io/badge/Metabase-509EE3?style=for-the-badge&logo=metabase&logoColor=white)
 
-## Tech Stack
+---
 
-| Layer | Technology |
+## 📌 Sobre o projeto
+
+Pipeline de dados construído com o dataset público da [Olist](https://olist.com/) — mais de **100 mil pedidos reais** do e-commerce brasileiro entre 2016 e 2018.
+
+O objetivo foi construir uma arquitetura completa de engenharia de dados: ingestão, armazenamento, transformação, orquestração e visualização — tudo rodando via Docker com um único comando.
+
+---
+
+## 🏗️ Arquitetura
+
+```
+CSV (Olist/Kaggle)
+       │
+       ▼
+ Python + Pandas          ← Ingestão e limpeza
+       │
+       ▼
+  PostgreSQL 15           ← Armazenamento (raw)
+       │
+       ▼
+      dbt                 ← Transformação (staging → marts)
+       │
+       ▼
+   Metabase               ← Dashboard e visualização
+       │
+  Prefect 2               ← Orquestração de todo o fluxo
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Camada | Tecnologia |
 |---|---|
-| Data Source | Olist Dataset (Kaggle) |
-| Ingestion | Python + Pandas |
-| Storage | PostgreSQL 15 |
-| Transformation | dbt |
-| Orchestration | Prefect 2 |
-| Visualization | Metabase |
-| Infrastructure | Docker Compose |
+| Fonte de dados | Olist Dataset (Kaggle) |
+| Ingestão | Python + Pandas |
+| Armazenamento | PostgreSQL 15 |
+| Transformação | dbt |
+| Orquestração | Prefect 2 |
+| Visualização | Metabase |
+| Infraestrutura | Docker Compose |
 
-## Data Models
+---
 
-### Staging
-- `stg_orders` — cleaned orders data
-- `stg_customers` — cleaned customers data
-- `stg_order_items` — cleaned order items data
+## 📊 Modelos de dados
 
-### Marts
-- `orders_by_state` — total orders and avg delivery days by state
-- `revenue_by_category` — revenue and orders by product category
-- `top_sellers` — best performing sellers
+**Staging** — limpeza e padronização dos dados brutos:
+- `stg_orders` — pedidos limpos
+- `stg_customers` — clientes limpos
+- `stg_order_items` — itens de pedido limpos
 
-## How to Run
+**Marts** — camada analítica pronta para consumo:
+- `orders_by_state` — total de pedidos e média de dias de entrega por estado
+- `revenue_by_category` — receita e pedidos por categoria de produto
+- `top_sellers` — melhores vendedores
 
-### Prerequisites
+---
+
+## 📸 Dashboard
+
+![Olist Analytics Dashboard](docs/dashboard.png)
+
+---
+
+## ▶️ Como rodar
+
+### Pré-requisitos
+
 - Docker Desktop
-- Python 3.11
+- Python 3.11+
 
-### 1. Clone the repository
+### 1. Clone o repositório
+
 ```bash
 git clone https://github.com/thalisondev/olist-data-pipeline.git
 cd olist-data-pipeline
 ```
 
-### 2. Download the dataset
-Download the [Olist dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) and place the CSV files in `data/raw/olist/`.
+### 2. Baixe o dataset
 
-### 3. Start the infrastructure
+Baixe o [dataset da Olist no Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) e coloque os arquivos CSV em `data/raw/olist/`.
+
+### 3. Suba a infraestrutura
+
 ```bash
 docker-compose up -d
 ```
 
-### 4. Run the ingestion
+### 4. Execute a ingestão
+
 ```bash
 python pipeline.py
 ```
 
-### 5. Run dbt models
+### 5. Rode os modelos dbt
+
 ```bash
 cd transform
 dbt run --profiles-dir .
 ```
 
-### 6. Access the dashboards
-- **Metabase:** http://localhost:3000
-- **Prefect:** http://localhost:4200
+### 6. Acesse os dashboards
 
-## Dashboard Preview
+| Serviço | URL |
+|---|---|
+| Metabase | http://localhost:3000 |
+| Prefect | http://localhost:4200 |
 
-![Olist Analytics Dashboard](docs/dashboard.png)
+---
 
-## Dataset
-- 100k+ orders from 2016 to 2018
-- 9 tables: orders, customers, products, sellers, payments, reviews, geolocation
-- Source: [Kaggle - Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
+## 📦 Dataset
+
+- **100k+ pedidos** de 2016 a 2018
+- **9 tabelas:** orders, customers, products, sellers, payments, reviews, geolocation
+- Fonte: [Kaggle — Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
+
+---
+
+## 👤 Autor
+
+Feito por [Thalison Santos](https://github.com/thalisondev) — [@LinkedIn](https://www.linkedin.com/in/thalison-dev)
